@@ -1,0 +1,16 @@
+body {
+    background-color: darkgreen;
+}
+
+.loginField {
+    position: relative;
+    text-align: center;
+    border: solid black 3px;
+    width: fit-content;
+    padding: 10px;
+}
+
+.title {
+    color: rgb(163, 248, 117);
+}
+
