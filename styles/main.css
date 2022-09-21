@@ -21,12 +21,12 @@ body {
     color: rgb(163, 248, 117);
 }
 
-.ageField {
+.difficultyField {
     position: relative;
 }
 
 .emailField{
-    outline: 3px solid black;
+    /* outline: 3px solid black; */
 }
 
 .errorMessage{

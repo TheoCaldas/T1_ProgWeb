@@ -14,16 +14,20 @@
         <form action="" onsubmit="return false" method="get">
             <input class="emailField" type="text" id="emailField" placeholder="E-mail em Priplanus">
             <br>
-            <div id="errorMessage" class="errorMessage">
+            <div id="emailErrorMessage" class="errorMessage">
                 E-mail Priplanuano Inválido!
             </div>
             <br>
-            <select name="difficulty" id="ageField" class="ageField">
+            <select id="difficultyField" class="difficultyField">
                 <option value="" disabled selected>Dificuldade</option>
                 <option value="Fácil">Fácil</option>
                 <option value="Normal">Normal</option>
                 <option value="Difícil">Difícil</option>
             </select>
+            <br>
+            <div id="difficultyErrorMessage" class="errorMessage">
+                Dificuldade não selecionada!
+            </div>
             <br>
             <input type="button" value="Jogar" id="playButton">
         </form>

@@ -1,25 +1,60 @@
+var fieldToMessageID = { //global
+    "emailField": "emailErrorMessage",
+    "difficultyField": "difficultyErrorMessage"
+}
+
 onload = function(){
-    document.getElementById("playButton").addEventListener("click", confirmEmail);
-    document.getElementById("emailField").addEventListener("input", resetAppearence);
+    document.getElementById("playButton").addEventListener("click", validateForm);
+    document.getElementById("emailField").addEventListener("input", hideError);
+    document.getElementById("difficultyField").addEventListener("input", hideError);
 }
 
-function resetAppearence(event){
-    event.target.style.outlineColor = "black";
-    document.getElementById("errorMessage").style.visibility = "hidden";
-}
+//goes to next page if form input is correct
+function validateForm(){
+    var isValidEmail = checkEmail();
+    var isDiffSelected = checkDifficulty();
 
-//to do: check if difficulty has a value
-function confirmEmail(){
-    var emailElement = document.getElementById("emailField");
-    var typedEmail = emailElement.value;
-    // var re = /^\\[^aeiou]+\[[^aeiou]+\|([^aeiou]+\|)*[^aeiou]+\]$/;
-    var re = /^\\[qwrtypsdfghjklzxcvbnm]+\[[qwrtypsdfghjklzxcvbnm]+\|([qwrtypsdfghjklzxcvbnm]+\|)*[qwrtypsdfghjklzxcvbnm]+\]$/;
-    if (!re.test(typedEmail.toLowerCase()))
-    {
-        emailElement.style.outlineColor = "red";
-        document.getElementById("errorMessage").style.visibility = "visible";
-    }
-    else
+    if (isValidEmail && isDiffSelected){
         console.log("go to next page");
         // window.location.href = "game.html";
+    }
+}
+
+//returns if typed email is in the correct format
+function checkEmail(){
+    var emailElement = document.getElementById("emailField");
+    var typedEmail = emailElement.value;
+
+    // var re = /^\\[^aeiou]+\[[^aeiou]+\|([^aeiou]+\|)*[^aeiou]+\]$/;
+    var re = /^\\[qwrtypsdfghjklzxcvbnm]+\[[qwrtypsdfghjklzxcvbnm]+\|([qwrtypsdfghjklzxcvbnm]+\|)*[qwrtypsdfghjklzxcvbnm]+\]$/;
+
+    if (!re.test(typedEmail.toLowerCase())){
+        showError(emailElement);
+        return false;
+    }
+    return true;
+}
+
+//returns if game difficulty is selected
+function checkDifficulty(){
+    var diffElement = document.getElementById("difficultyField");
+    var selectedDiff = diffElement.value;
+
+    if (selectedDiff == ""){
+        showError(diffElement);
+        return false;
+    }
+    return true;
+}
+
+//resets event target style and hide associated error message
+function hideError(event){
+    event.target.style.outline = "none";
+    document.getElementById(fieldToMessageID[event.target.id]).style.visibility = "hidden";
+}
+
+//change element style and show associated error message
+function showError(element){
+    element.style.outline = "3px solid red";
+    document.getElementById(fieldToMessageID[element.id]).style.visibility = "visible";
 }
