@@ -65,10 +65,9 @@ function snakeMovementComponent(name, entity) {
     this.name = name,
     this.entity = entity,
     this.load = function() {
-        // window.addEventListener('keydown', event => {})
-        // onkeydown = function(event) {
-        //     this.keyDownListener(event)
-        // }
+        onkeydown = (event) => {
+            this.keyDownListener(event)
+        }
     },
     this.update = function() {
         switch (this.entity.direction) {
@@ -108,9 +107,6 @@ function load() {
     gameField.start();
     snake = new entity(30, 30, "red", 10, 10, 5)
     var component = new snakeMovementComponent("snakeMovement", snake);
-    window.addEventListener('keydown', function(event) {
-        component.keyDownListener(event)
-    })
     snake.addComponent(component)
 }
 
