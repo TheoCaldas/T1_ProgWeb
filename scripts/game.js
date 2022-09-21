@@ -33,7 +33,7 @@ const KeyCode = {
     DownArrow : 40
 }
 
-function entity(width, height, color, x, y, velocity, components) {
+function entity(width, height, color, x, y, velocity) {
     this.width = width;
     this.height = height;
     this.color = color;
@@ -41,7 +41,7 @@ function entity(width, height, color, x, y, velocity, components) {
     this.y = y;
     this.velocity = velocity,
     this.direction = Direction.Right
-    this.components = components
+    this.components = []
     this.draw = function() {
         ctx = gameField.context;
         ctx.fillStyle = color;
@@ -52,38 +52,46 @@ function entity(width, height, color, x, y, velocity, components) {
             this.components[i].update(this)
         }
     }
+    this.addComponent = function(component) {
+        this.components.push(component)
+    }
+    this.removeComponent = function(name) {
+        this.components = this.components.filter(componet => componet.name == name)
+    }
 }
 
-function snakeMovementComponent() {
-    this.update = function(entity) {
-        switch (entity.direction) {
+function snakeMovementComponent(name, entity) {
+    this.name = name,
+    this.entity = entity,
+    this.update = function() {
+        switch (this.entity.direction) {
             case Direction.Up:
-                entity.y -= entity.velocity
+                this.entity.y -= this.entity.velocity
                 break
             case Direction.Down:
-                entity.y += entity.velocity
+                this.entity.y += this.entity.velocity
                 break
             case Direction.Left:
-                entity.x -= entity.velocity
+                this.entity.x -= this.entity.velocity
                 break
             case Direction.Right:
-                entity.x += entity.velocity
+                this.entity.x += this.entity.velocity
                 break
         }
     }
     this.keyDownListener = function(event) {
         switch (event.keyCode) {
             case KeyCode.UpArrow:
-                entity.direction = Direction.Up
+                this.entity.direction = Direction.Up
                 break;
             case KeyCode.DownArrow:
-                entity.direction = Direction.Down
+                this.entity.direction = Direction.Down
                 break;
             case KeyCode.LeftArrow:
-                entity.direction = Direction.Left
+                this.entity.direction = Direction.Left
                 break;        
             case KeyCode.RightArrow:
-                entity.direction = Direction.Right
+                this.entity.direction = Direction.Right
                 break;
         }
     }
@@ -91,14 +99,12 @@ function snakeMovementComponent() {
 
 function load() {
     gameField.start();
-    var keyComponent = new snakeKeyListenerComponent()
+    snake = new entity(30, 30, "red", 10, 10, 5)
+    var keyComponent = new snakeMovementComponent("snakeMovement",snake)
     window.addEventListener('keydown', function(e) {
         keyComponent.keyDownListener(e)
     })
-    snake = new entity(30, 30, "red", 10, 10, 5, [
-        new snakeMovementComponent(),
-    ])
-
+    snake.addComponent(keyComponent)
 }
 
 function update() {
