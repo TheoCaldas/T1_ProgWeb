@@ -31,4 +31,6 @@ body {
 
 .errorMessage{
     color: red;
+    visibility: hidden;
+    font-size: small;
 }

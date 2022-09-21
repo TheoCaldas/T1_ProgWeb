@@ -1,5 +1,11 @@
 onload = function(){
     document.getElementById("playButton").addEventListener("click", confirmEmail);
+    document.getElementById("emailField").addEventListener("input", resetAppearence);
+}
+
+function resetAppearence(event){
+    event.target.style.outlineColor = "black";
+    document.getElementById("errorMessage").style.visibility = "hidden";
 }
 
 function confirmEmail(){
@@ -9,10 +15,10 @@ function confirmEmail(){
     // var re = /^\[qwrtypsdfghjklzxcvbnm]+\[[qwrtypsdfghjklzxcvbnm]+|([qwrtypsdfghjklzxcvbnm]+|).[qwrtypsdfghjklzxcvbnm]+\]$/;
     // console.log(re.test(email.toLowerCase())); 
     if (!re.test(typedEmail.toLowerCase()))
-        emailElement.style.outlineColor = "red";
-    else
     {
-        emailElement.style.outlineColor = "black";
-        console.log("go to next page");
+        emailElement.style.outlineColor = "red";
+        document.getElementById("errorMessage").style.visibility = "visible";
     }
+    else
+        console.log("go to next page");
 }
