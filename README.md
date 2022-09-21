@@ -23,7 +23,7 @@ Cauda da cobra - Quadradinho Azul Claro <br>
 Fruta - Quadradinho Vermelho <br>
 
 ### 1.3 Fluxo de telas
-<img src="/images/fluxograma.png" alt="Fluxograma Minhoca Louca" style="height: 100px; width:100px;"/>
+<img src="/images/fluxograma.png" alt="Fluxograma Minhoca Louca" style="height: 500px; width:500px;"/>
 
 ## 2. Relatório
 Foi implementado o menu inicial que pede ao usuário, através de formulário, seu email em Priplanus (texto) e a dificuldade do jogo (seletor de opções). <br>
