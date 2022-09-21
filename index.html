@@ -6,22 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/main.css">
     <script src="scripts/main.js"></script>
-    <title>Crazy Snake</title>
+    <title>Minhoca Louca - Início</title>
 </head>
 <body>
     <div class="loginField">
-        <h1 class="title">Crazy Snake</h1>
-        <form action="playButtonSelected">
-            <input type="email" name="email" id="emailField" placeholder="Email">
+        <h1 class="title">Minhoca Louca</h1>
+        <form action="" method="get">
+            <input class="emailField" type="text" id="emailField" placeholder="E-mail em Priplanus">
             <br>
-            <select name="Dificuldade" id="ageField" class="ageField">
+            <div id="errorMessage" class="errorMessage">
+                E-mail Priplanuano Inválido!
+            </div>
+            <br>
+            <select name="difficulty" id="ageField" class="ageField">
                 <option value="" disabled selected>Dificuldade</option>
                 <option value="Fácil">Fácil</option>
                 <option value="Normal">Normal</option>
                 <option value="Difícil">Difícil</option>
             </select>
             <br>
-            <input type="button" value="Jogar">
+            <input type="button" value="Jogar" id="playButton">
         </form>
     </div>
 </body>

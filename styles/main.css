@@ -25,3 +25,10 @@ body {
     position: relative;
 }
 
+.emailField{
+    outline: 3px solid black;
+}
+
+.errorMessage{
+    color: red;
+}
