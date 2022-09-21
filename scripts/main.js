@@ -1,0 +1,3 @@
+function playButtonSelected() {
+    alert("oi")
+}

@@ -2,15 +2,26 @@ body {
     background-color: darkgreen;
 }
 
+.container {
+    text-align: center;
+}
+
 .loginField {
-    position: relative;
     text-align: center;
     border: solid black 3px;
     width: fit-content;
+    position: absolute;
     padding: 30px;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
 }
 
 .title {
     color: rgb(163, 248, 117);
+}
+
+.ageField {
+    position: relative;
 }
 
