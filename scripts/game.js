@@ -53,6 +53,7 @@ function entity(width, height, color, x, y, velocity) {
         }
     }
     this.addComponent = function(component) {
+        component.load()
         this.components.push(component)
     }
     this.removeComponent = function(name) {
@@ -63,6 +64,12 @@ function entity(width, height, color, x, y, velocity) {
 function snakeMovementComponent(name, entity) {
     this.name = name,
     this.entity = entity,
+    this.load = function() {
+        // window.addEventListener('keydown', event => {})
+        // onkeydown = function(event) {
+        //     this.keyDownListener(event)
+        // }
+    },
     this.update = function() {
         switch (this.entity.direction) {
             case Direction.Up:
@@ -100,11 +107,11 @@ function snakeMovementComponent(name, entity) {
 function load() {
     gameField.start();
     snake = new entity(30, 30, "red", 10, 10, 5)
-    var keyComponent = new snakeMovementComponent("snakeMovement",snake)
-    window.addEventListener('keydown', function(e) {
-        keyComponent.keyDownListener(e)
+    var component = new snakeMovementComponent("snakeMovement", snake);
+    window.addEventListener('keydown', function(event) {
+        component.keyDownListener(event)
     })
-    snake.addComponent(keyComponent)
+    snake.addComponent(component)
 }
 
 function update() {
