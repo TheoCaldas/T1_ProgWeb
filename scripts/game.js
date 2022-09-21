@@ -1,6 +1,6 @@
 onload = load;
 
-var snake;
+let snake;
 
 gameField = {
     canvas: document.createElement("canvas"),
@@ -26,12 +26,20 @@ const Direction = {
     Right : 4
 }
 
-function entity(width, height, color, x, y, components) {
+const KeyCode = {
+    LeftArrow : 37,
+    UpArrow : 38,
+    RightArrow : 39,
+    DownArrow : 40
+}
+
+function entity(width, height, color, x, y, velocity, components) {
     this.width = width;
     this.height = height;
     this.color = color;
     this.x = x;
     this.y = y;
+    this.velocity = velocity,
     this.direction = Direction.Right
     this.components = components
     this.draw = function() {
@@ -40,8 +48,8 @@ function entity(width, height, color, x, y, components) {
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
     this.update = function() {
-        for(i = 0; i < this.components.length; i++) {
-            this.components[0].update(this)
+        for(var i = 0; i < this.components.length; i++) {
+            this.components[i].update(this)
         }
     }
 }
@@ -50,26 +58,47 @@ function snakeMovementComponent() {
     this.update = function(entity) {
         switch (entity.direction) {
             case Direction.Up:
-                entity.y -= 1
+                entity.y -= entity.velocity
                 break
             case Direction.Down:
-                entity.y += 1
+                entity.y += entity.velocity
                 break
             case Direction.Left:
-                entity.x -= 1
+                entity.x -= entity.velocity
                 break
             case Direction.Right:
-                entity.x += 1
+                entity.x += entity.velocity
                 break
+        }
+    }
+    this.keyDownListener = function(event) {
+        switch (event.keyCode) {
+            case KeyCode.UpArrow:
+                entity.direction = Direction.Up
+                break;
+            case KeyCode.DownArrow:
+                entity.direction = Direction.Down
+                break;
+            case KeyCode.LeftArrow:
+                entity.direction = Direction.Left
+                break;        
+            case KeyCode.RightArrow:
+                entity.direction = Direction.Right
+                break;
         }
     }
 }
 
 function load() {
     gameField.start();
-    snake = new entity(30, 30, "red", 10, 10, [
-        new snakeMovementComponent()
+    var keyComponent = new snakeKeyListenerComponent()
+    window.addEventListener('keydown', function(e) {
+        keyComponent.keyDownListener(e)
+    })
+    snake = new entity(30, 30, "red", 10, 10, 5, [
+        new snakeMovementComponent(),
     ])
+
 }
 
 function update() {
