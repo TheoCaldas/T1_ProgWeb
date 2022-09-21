@@ -12,15 +12,14 @@ function resetAppearence(event){
 function confirmEmail(){
     var emailElement = document.getElementById("emailField");
     var typedEmail = emailElement.value;
-    var re = /^\[^aeiou]+\[[^aeiou]+|([^aeiou]+|).[^aeiou]+\]$/;
-    // var re = /^\[qwrtypsdfghjklzxcvbnm]+\[[qwrtypsdfghjklzxcvbnm]+|([qwrtypsdfghjklzxcvbnm]+|).[qwrtypsdfghjklzxcvbnm]+\]$/;
-    // console.log(re.test(email.toLowerCase())); 
+    // var re = /^\\[^aeiou]+\[[^aeiou]+\|([^aeiou]+\|)*[^aeiou]+\]$/;
+    var re = /^\\[qwrtypsdfghjklzxcvbnm]+\[[qwrtypsdfghjklzxcvbnm]+\|([qwrtypsdfghjklzxcvbnm]+\|)*[qwrtypsdfghjklzxcvbnm]+\]$/;
     if (!re.test(typedEmail.toLowerCase()))
     {
         emailElement.style.outlineColor = "red";
         document.getElementById("errorMessage").style.visibility = "visible";
     }
     else
-        // console.log("go to next page");
-        window.location.href = "game.html";
+        console.log("go to next page");
+        // window.location.href = "game.html";
 }
