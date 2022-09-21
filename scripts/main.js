@@ -8,6 +8,7 @@ function resetAppearence(event){
     document.getElementById("errorMessage").style.visibility = "hidden";
 }
 
+//to do: check if difficulty has a value
 function confirmEmail(){
     var emailElement = document.getElementById("emailField");
     var typedEmail = emailElement.value;
@@ -20,5 +21,6 @@ function confirmEmail(){
         document.getElementById("errorMessage").style.visibility = "visible";
     }
     else
-        console.log("go to next page");
+        // console.log("go to next page");
+        window.location.href = "game.html";
 }
