@@ -7,15 +7,10 @@ body {
     text-align: center;
     border: solid black 3px;
     width: fit-content;
-    /* padding: 30px; */
-    top: 100px;
-    padding: auto;
-    padding-top: 0px;
+    padding: 30px;
 }
 
 .title {
-    position: relative;
     color: rgb(163, 248, 117);
-    top: -10px;
 }
 
