@@ -16,7 +16,7 @@ function validateForm(){
 
     if (isValidEmail && isDiffSelected){
         console.log("go to next page");
-        // window.location.href = "game.html";
+        window.location.href = "game.html";
     }
 }
 

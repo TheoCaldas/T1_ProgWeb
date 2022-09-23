@@ -1,6 +1,5 @@
 onload = load;
-
-let snake;
+var entities = []
 
 gameField = {
     canvas: document.createElement("canvas"),
@@ -20,6 +19,7 @@ gameField = {
 }
 
 const Direction = {
+    Idle : 0,
     Up : 1,
     Down : 2,
     Left : 3,
@@ -33,7 +33,18 @@ const KeyCode = {
     DownArrow : 40
 }
 
-function entity(width, height, color, x, y, velocity) {
+const Components = {
+    SnakeMovement : 1,
+    Collider : 2
+}
+
+const Entities = {
+    Snake : 'Snake',
+    Fruit : 'Fruit'
+}
+
+function entity(name, width, height, color, x, y, velocity) {
+    this.name = name,
     this.width = width;
     this.height = height;
     this.color = color;
@@ -58,6 +69,15 @@ function entity(width, height, color, x, y, velocity) {
     }
     this.removeComponent = function(name) {
         this.components = this.components.filter(componet => componet.name == name)
+    },
+    this.hasComponent = function(name) {
+        var hasComponent = false
+        this.components.forEach((component) => {
+            if(component.name == name) {
+                hasComponent = true
+            }
+        })
+        return hasComponent
     }
 }
 
@@ -71,6 +91,8 @@ function snakeMovementComponent(name, entity) {
     },
     this.update = function() {
         switch (this.entity.direction) {
+            case Direction.Idle:
+                break;
             case Direction.Up:
                 this.entity.y -= this.entity.velocity
                 break
@@ -103,21 +125,56 @@ function snakeMovementComponent(name, entity) {
     }
 }
 
+function colliderComponent(name, entity, type, onCollision) {
+    this.name = name,
+    this.entity = entity,
+    this.type = type
+    this.onCollision = onCollision,
+    this.load = function() {},
+    this.update = function() {
+        entities.forEach((e) => {
+            if(this.checkCollisionWith(e) && e.hasComponent(Components.Collider)) {
+
+                this.onCollision()
+            }
+        })
+    },
+    this.checkCollisionWith = function(entity) {
+        if(this.entity == entity) return false;
+        return this.entity.x < entity.x + entity.width &&
+               entity.x < this.entity.x + this.entity.width &&
+               this.entity.y < entity.y + entity.height &&
+               entity.y < this.entity.y + this.entity.height
+    }
+}
+
 function load() {
     gameField.start();
-    snake = new entity(30, 30, "red", 10, 10, 5)
-    var component = new snakeMovementComponent("snakeMovement", snake);
-    snake.addComponent(component)
+    snake = new entity(Entities.Snake, 30, 30, "red", 10, 10, 5)
+    fruit = new entity(Entities.Fruit, 20, 20, "black", 200, 200, 0)
+    snake.addComponent(new snakeMovementComponent(Components.SnakeMovement, snake))
+    snake.addComponent(new colliderComponent(Components.Collider, snake, 'snake', () => {
+        snake.direction = Direction.Idle
+    }))
+
+    fruit.addComponent(new colliderComponent(Components.Collider, fruit, 'fruit', () => {}))
+
+    entities.push(snake)
+    entities.push(fruit)
 }
 
 function update() {
-    snake.update()
+    entities.forEach((entity) => {
+        entity.update()
+    })
     draw()
 }
 
 function draw() {
     gameField.clear()
-    snake.draw()
+    entities.forEach((entity) => {
+        entity.draw()
+    })
 }
 
 
