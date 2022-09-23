@@ -8,7 +8,7 @@ gameField = {
         this.canvas.height = 600;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.interval = setInterval(update, 20)
+        this.interval = setInterval(update, 1)
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -134,7 +134,6 @@ function colliderComponent(name, entity, type, onCollision) {
     this.update = function() {
         entities.forEach((e) => {
             if(this.checkCollisionWith(e) && e.hasComponent(Components.Collider)) {
-
                 this.onCollision()
             }
         })
@@ -150,14 +149,15 @@ function colliderComponent(name, entity, type, onCollision) {
 
 function load() {
     gameField.start();
-    snake = new entity(Entities.Snake, 30, 30, "red", 10, 10, 5)
+    snake = new entity(Entities.Snake, 30, 30, "red", 10, 10, 1)
     fruit = new entity(Entities.Fruit, 20, 20, "black", 200, 200, 0)
     snake.addComponent(new snakeMovementComponent(Components.SnakeMovement, snake))
     snake.addComponent(new colliderComponent(Components.Collider, snake, 'snake', () => {
         snake.direction = Direction.Idle
     }))
+    fruit.addComponent(new colliderComponent(Components.Collider, fruit, 'fruit', () => {
 
-    fruit.addComponent(new colliderComponent(Components.Collider, fruit, 'fruit', () => {}))
+    }))
 
     entities.push(snake)
     entities.push(fruit)
