@@ -8,7 +8,7 @@ gameField = {
         this.canvas.height = 600;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.interval = setInterval(update, 1)
+        this.interval = setInterval(update, 30)
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -34,6 +34,7 @@ const KeyCode = {
 }
 
 const Components = {
+    SnakeBody : 0,
     SnakeMovement : 1,
     Collider : 2
 }
@@ -43,7 +44,7 @@ const Entities = {
     Fruit : 'Fruit'
 }
 
-function entity(name, width, height, color, x, y, velocity) {
+function Entity(name, width, height, color, x, y, velocity) {
     this.name = name,
     this.width = width;
     this.height = height;
@@ -53,10 +54,14 @@ function entity(name, width, height, color, x, y, velocity) {
     this.velocity = velocity,
     this.direction = Direction.Right
     this.components = []
+    this.body = []
     this.draw = function() {
         ctx = gameField.context;
         ctx.fillStyle = color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
+        this.body.forEach((entity) => {
+            entity.draw()
+        })
     }
     this.update = function() {
         for(var i = 0; i < this.components.length; i++) {
@@ -78,6 +83,9 @@ function entity(name, width, height, color, x, y, velocity) {
             }
         })
         return hasComponent
+    },
+    this.getComponent = function(name) {
+        return this.components.filter(componet => componet.name == name)[0]
     }
 }
 
@@ -90,6 +98,8 @@ function snakeMovementComponent(name, entity) {
         }
     },
     this.update = function() {
+        var auxX = this.entity.x
+        var auxY = this.entity.y
         switch (this.entity.direction) {
             case Direction.Idle:
                 break;
@@ -106,6 +116,9 @@ function snakeMovementComponent(name, entity) {
                 this.entity.x += this.entity.velocity
                 break
         }
+        var x = new Entity('', 20, 20, 'blue', auxX, auxY, snake.velocity)
+        this.entity.body.unshift(x)
+        this.entity.body.pop()
     }
     this.keyDownListener = function(event) {
         switch (event.keyCode) {
@@ -123,6 +136,28 @@ function snakeMovementComponent(name, entity) {
                 break;
         }
     }
+}
+
+function snakeBodyComponent(name, entity) {
+    this.name = name,
+    this.entity = entity
+    this.body = []
+    this.load = function() {}
+    this.update = function() {
+        this.body.forEach((tile) => {
+            this.moveBody()
+            tile.draw()
+        })
+    }
+    this.moveBody = function(newPosition) {
+        this.body.unshift(new entity(Entities.Fruit, 20, 20, "black", 200, 200, 0))
+        this.body.pop()
+    },
+    this.addTile = function() {
+        var newTile = 
+        this.body.push(new entity(Entities.Fruit, 20, 20, "black", 200, 200, 0))
+    }
+
 }
 
 function colliderComponent(name, entity, type, onCollision) {
@@ -149,11 +184,12 @@ function colliderComponent(name, entity, type, onCollision) {
 
 function load() {
     gameField.start();
-    snake = new entity(Entities.Snake, 30, 30, "red", 10, 10, 1)
-    fruit = new entity(Entities.Fruit, 20, 20, "black", 200, 200, 0)
+    snake = new Entity(Entities.Snake, 30, 30, "red", 10, 10, 20)
+    fruit = new Entity(Entities.Fruit, 20, 20, "black", 200, 200, 0)
     snake.addComponent(new snakeMovementComponent(Components.SnakeMovement, snake))
+    snake.addComponent(new snakeBodyComponent(Components.SnakeBody, snake))
     snake.addComponent(new colliderComponent(Components.Collider, snake, 'snake', () => {
-        snake.direction = Direction.Idle
+        snake.body.push(new Entity('', 20, 20, 'blue', snake.x, snake.y, snake.velocity))
     }))
     fruit.addComponent(new colliderComponent(Components.Collider, fruit, 'fruit', () => {
 
