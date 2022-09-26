@@ -6,7 +6,12 @@ var fruit;
 const K = {
     screenWidth : 800,
     screenHeight : 600,
-    tileSize : 10,
+    tileSize : 20,
+    snakeInitialPos : {
+        x : 10,
+        y : 10
+    },
+    speed: 30
 }
 
 const gameField = {
@@ -16,7 +21,7 @@ const gameField = {
         this.canvas.height = K.screenHeight;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.interval = setInterval(update, 30)
+        this.interval = setInterval(update, 1000/K.speed)
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -38,7 +43,7 @@ const Direction = {
     Down : 2,
     Left : 3,
     Right : 4
-}
+} 
 
 const KeyCode = {
     LeftArrow : 37,
@@ -83,17 +88,11 @@ function TileMap() {
 }
 
 function Snake() {
-    this.type = Elements.SNAKE
     this.width = K.tileSize,
     this.height = K.tileSize,
-    this.position = {
-        x : 40,
-        y : 30,
-    },
+    this.position = K.snakeInitialPos,
     this.direction = Direction.Idle,
-    this.body = [
-        {x: 39, y: 30}
-    ],
+    this.body = [],
     this.load = function() {
         onkeydown = (event) => {
             this.keyDownListener(event)
@@ -129,9 +128,7 @@ function Snake() {
                 tileMap.map[tile.x][tile.y] = Elements.SNAKE 
             })
 
-            tileMap.map[lastPosition.x][lastPosition.y] = Elements.MAP
             tileMap.map[this.position.x][this.position.y] = Elements.SNAKE
-
     },
     this.gameHasEnded = () => {
         var minX = 0; var maxX = K.screenWidth/K.tileSize - 1;
@@ -164,7 +161,6 @@ function Snake() {
 }
 
 function Fruit() {
-    this.type = Elements.FRUIT
     this.width = K.tileSize,
     this.height = K.tileSize,
     this.spawn = () => {
