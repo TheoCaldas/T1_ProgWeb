@@ -163,20 +163,14 @@ function Snake() {
         return tileMap.map[this.position.x][this.position.y] == Elements.FRUIT
     },
     this.keyDownListener = (event) => {
-        switch (event.keyCode) {
-            case KeyCode.UpArrow || KeyCode.W:
-                this.direction = Direction.Up
-                break;
-            case KeyCode.DownArrow || KeyCode.S:
-                this.direction = Direction.Down
-                break;
-            case KeyCode.LeftArrow || KeyCode.A:
-                this.direction = Direction.Left
-                break;        
-            case KeyCode.RightArrow || KeyCode.D:
-                this.direction = Direction.Right
-                break;
-        }
+        if ((event.keyCode == KeyCode.UpArrow || event.keyCode == KeyCode.W) && this.direction != Direction.Down) 
+            this.direction = Direction.Up;
+        else if ((event.keyCode == KeyCode.DownArrow || event.keyCode == KeyCode.S) && this.direction != Direction.Up) 
+            this.direction = Direction.Down;
+        else if ((event.keyCode == KeyCode.LeftArrow || event.keyCode == KeyCode.A) && this.direction != Direction.Right)
+            this.direction = Direction.Left;
+        else if ((event.keyCode == KeyCode.RightArrow || event.keyCode == KeyCode.D) && this.direction != Direction.Left)
+            this.direction = Direction.Right;
     }
 }
 
