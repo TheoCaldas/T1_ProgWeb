@@ -43,7 +43,8 @@ const gameField = {
         this.canvas.width = K.screenWidth
         this.canvas.height = K.screenHeight;
         this.context = this.canvas.getContext("2d");
-        document.getElementById("gameField").appendChild(this.canvas);
+        const gameFieldElement = document.getElementById("gameField")
+        gameFieldElement.insertBefore(this.canvas, gameFieldElement.children[1]);
         this.interval = setInterval(update, 1000/K.speed)
     },
     clear : function() {
