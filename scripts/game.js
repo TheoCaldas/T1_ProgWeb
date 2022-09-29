@@ -18,19 +18,19 @@ function GameSettings(difficulty) {
 
     switch(difficulty){
         case "easy":
-            this.tileSize = 20;
+            this.tileSize = 40;
             this.snakeInitialPos = {x : 10, y : 10};
-            this.speed = 20;
+            this.speed = 10;
             break;
         case "normal":
-            this.tileSize = 15;
+            this.tileSize = 30;
             this.snakeInitialPos = {x : 20, y : 20};
-            this.speed = 30;
+            this.speed = 20;
             break;
         case "hard":
-            this.tileSize = 10;
+            this.tileSize = 20;
             this.snakeInitialPos = {x : 30, y : 30};
-            this.speed = 40;
+            this.speed = 30;
             break;
         default:
             break;
@@ -57,7 +57,8 @@ const gameField = {
 const Elements = {
     MAP : 0,
     FRUIT : 1,
-    SNAKE : 2,
+    SNAKE_HEAD : 2,
+    SNAKE_BODY : 3
 }
 
 const Direction = {
@@ -95,21 +96,24 @@ function TileMap() {
         ctx = gameField.context;
         for(var i = 0; i < this.width; i++) {
             for(var j = 0; j < this.height; j++) {
-                ctx.fillStyle = this.getTileColor(this.map[i][j])
+                var img = this.getTileAsset(this.map[i][j])
                 var x = K.tileSize * i;
                 var y = K.tileSize * j;
-                ctx.fillRect(x, y, K.tileSize, K.tileSize);
+                ctx.drawImage(img, x, y, K.tileSize, K.tileSize);
             }
         }
     },
-    this.getTileColor = (type) => {
+
+    this.getTileAsset = (type) => {
         switch(type) {
             case Elements.MAP:
-                return 'green'
+                return document.getElementById("mapTile");
             case Elements.FRUIT:
-                return 'yellow'
-            case Elements.SNAKE:
-                return 'blue'
+                return document.getElementById("fruit");
+            case Elements.SNAKE_HEAD:
+                return document.getElementById("snakeHeadAsset");
+            case Elements.SNAKE_BODY:
+                return document.getElementById("snakeBodyAsset");
         }
     }
 }
@@ -138,6 +142,7 @@ function Snake() {
             //check map colision
             if(this.gameHasEnded()) {
                 this.position = lastPosition
+                gameField.stop();
                 return
             }
 
@@ -153,10 +158,10 @@ function Snake() {
             tileMap.map[aux.x][aux.y] = Elements.MAP
 
             this.body.forEach((tile) => {
-                tileMap.map[tile.x][tile.y] = Elements.SNAKE 
+                tileMap.map[tile.x][tile.y] = Elements.SNAKE_BODY 
             })
 
-            tileMap.map[this.position.x][this.position.y] = Elements.SNAKE
+            tileMap.map[this.position.x][this.position.y] = Elements.SNAKE_HEAD
     },
     this.gameHasEnded = () => {
         var minX = 0; var maxX = K.screenWidth/K.tileSize - 1;
@@ -165,7 +170,7 @@ function Snake() {
                this.position.x > maxX ||
                this.position.y < minY || 
                this.position.y > maxY ||
-               tileMap.map[this.position.x][this.position.y] == Elements.SNAKE
+               tileMap.map[this.position.x][this.position.y] == Elements.SNAKE_BODY
     },
     this.fruitWasHitted = () => {
         return tileMap.map[this.position.x][this.position.y] == Elements.FRUIT
