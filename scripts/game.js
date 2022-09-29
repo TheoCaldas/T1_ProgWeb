@@ -65,7 +65,11 @@ const KeyCode = {
     LeftArrow : 37,
     UpArrow : 38,
     RightArrow : 39,
-    DownArrow : 40
+    DownArrow : 40,
+    W : 87,
+    A : 65,
+    S : 83,
+    D : 68,
 }
 
 function TileMap() {
@@ -160,16 +164,16 @@ function Snake() {
     },
     this.keyDownListener = (event) => {
         switch (event.keyCode) {
-            case KeyCode.UpArrow:
+            case KeyCode.UpArrow || KeyCode.W:
                 this.direction = Direction.Up
                 break;
-            case KeyCode.DownArrow:
+            case KeyCode.DownArrow || KeyCode.S:
                 this.direction = Direction.Down
                 break;
-            case KeyCode.LeftArrow:
+            case KeyCode.LeftArrow || KeyCode.A:
                 this.direction = Direction.Left
                 break;        
-            case KeyCode.RightArrow:
+            case KeyCode.RightArrow || KeyCode.D:
                 this.direction = Direction.Right
                 break;
         }
