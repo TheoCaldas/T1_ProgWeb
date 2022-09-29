@@ -3,15 +3,31 @@ var tileMap;
 var snake;
 var fruit;
 
-const K = {
-    screenWidth : 800,
-    screenHeight : 600,
-    tileSize : 20,
-    snakeInitialPos : {
-        x : 10,
-        y : 10
-    },
-    speed: 30
+const K = new GameSettings("easy");
+
+function GameSettings(difficulty){
+    this.screenWidth = 800;
+    this.screenHeight = 600;
+
+    switch(difficulty){
+        case "easy":
+            this.tileSize = 20;
+            this.snakeInitialPos = {x : 10, y : 10};
+            this.speed = 20;
+            break;
+        case "normal":
+            this.tileSize = 15;
+            this.snakeInitialPos = {x : 20, y : 20};
+            this.speed = 30;
+            break;
+        case "hard":
+            this.tileSize = 10;
+            this.snakeInitialPos = {x : 30, y : 30};
+            this.speed = 40;
+            break;
+        default:
+            break;
+    }
 }
 
 const gameField = {
