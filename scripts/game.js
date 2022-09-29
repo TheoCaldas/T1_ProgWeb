@@ -3,7 +3,13 @@ var tileMap;
 var snake;
 var fruit;
 
-const K = new GameSettings("easy");
+const K = new GameSettings(getDifficulty());
+
+function getDifficulty(){
+    var searchString = window.location.search;
+    var a = searchString.split('difficultyField=');
+    return a[1];
+}
 
 function GameSettings(difficulty){
     this.screenWidth = 800;
