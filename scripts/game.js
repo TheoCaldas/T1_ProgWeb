@@ -2,6 +2,7 @@ onload = load;
 var tileMap;
 var snake;
 var fruit;
+var score = 0;
 
 const K = new GameSettings(getDifficulty());
 
@@ -11,7 +12,7 @@ function getDifficulty(){
     return a[1];
 }
 
-function GameSettings(difficulty){
+function GameSettings(difficulty) {
     this.screenWidth = 800;
     this.screenHeight = 600;
 
@@ -42,7 +43,7 @@ const gameField = {
         this.canvas.width = K.screenWidth
         this.canvas.height = K.screenHeight;
         this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        document.getElementById("gameField").appendChild(this.canvas);
         this.interval = setInterval(update, 1000/K.speed)
     },
     clear : function() {
@@ -142,6 +143,7 @@ function Snake() {
 
             //check fruit collision
             if (this.fruitWasHitted()) {
+                this.scores();
                 this.body.push(lastPosition)
                 fruit.spawn()
             }
@@ -168,6 +170,10 @@ function Snake() {
     this.fruitWasHitted = () => {
         return tileMap.map[this.position.x][this.position.y] == Elements.FRUIT
     },
+    this.scores = () => {
+        score++;
+        document.getElementById("scoreTitle").innerHTML = "PONTOS: " + score;
+    }
     this.keyDownListener = (event) => {
         if ((event.keyCode == KeyCode.UpArrow || event.keyCode == KeyCode.W) && this.direction != Direction.Down) 
             this.direction = Direction.Up;

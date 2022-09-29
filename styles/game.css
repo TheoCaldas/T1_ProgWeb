@@ -1,8 +1,11 @@
 canvas {
     border: solid black 3px;
+}
+
+#gameField {
     text-align: center;
     position: absolute;
     left: 50%;
-    top: 45%;
+    top: 40%;
     transform: translate(-50%, -50%);
 }
