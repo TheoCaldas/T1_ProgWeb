@@ -9,3 +9,27 @@ canvas {
     top: 40%;
     transform: translate(-50%, -50%);
 }
+
+.backButton {
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    bottom: 18%;
+    transform: translate(-50%, -50%);
+
+    display: block;
+    width: 10%;
+    border: black 3px solid;
+    border-radius: 25px;
+    background-color: rgb(49, 165, 70);
+    color: white;
+    padding: 14px 28px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.backButton:hover {
+    background-color: rgb(166, 175, 167);
+    color: black;
+}

@@ -206,6 +206,10 @@ function Fruit() {
     }
 }
 
+function backToPreviousPage(){
+    window.history.back();
+}
+
 function load() {
     gameField.start();
     tileMap = new TileMap()
@@ -214,6 +218,8 @@ function load() {
     tileMap.load()
     snake.load()
     fruit.spawn()
+
+    document.getElementById("backButton").addEventListener("click", backToPreviousPage);
 }
 
 function update() {
