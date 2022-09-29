@@ -4,20 +4,16 @@ var fieldToMessageID = { //global
 }
 
 onload = function(){
-    document.getElementById("playButton").addEventListener("click", validateForm);
     document.getElementById("emailField").addEventListener("input", hideError);
     document.getElementById("difficultyField").addEventListener("input", hideError);
 }
 
-//goes to next page if form input is correct
+//returns if form input is correct
 function validateForm(){
     var isValidEmail = checkEmail();
     var isDiffSelected = checkDifficulty();
 
-    if (isValidEmail && isDiffSelected){
-        console.log("go to next page");
-        window.location.href = "game.html";
-    }
+    return (isValidEmail && isDiffSelected);
 }
 
 //returns if typed email is in the correct format
