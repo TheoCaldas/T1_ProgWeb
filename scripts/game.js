@@ -23,13 +23,13 @@ function GameSettings(difficulty) {
             this.speed = 10;
             break;
         case "normal":
-            this.tileSize = 30;
-            this.snakeInitialPos = {x : 20, y : 20};
+            this.tileSize = 40;
+            this.snakeInitialPos = {x : 10, y : 10};
             this.speed = 20;
             break;
         case "hard":
             this.tileSize = 20;
-            this.snakeInitialPos = {x : 30, y : 30};
+            this.snakeInitialPos = {x : 10, y : 10};
             this.speed = 30;
             break;
         default:
@@ -142,7 +142,6 @@ function Snake() {
 
             //check map colision
             if(this.gameHasEnded()) {
-                this.position = lastPosition
                 gameField.stop();
                 return
             }
