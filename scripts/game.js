@@ -83,13 +83,20 @@ const KeyCode = {
 
 function TileMap() {
     this.map = []
+    this.mapImgIndex = []
     this.width = K.screenWidth/K.tileSize
     this.height = K.screenHeight/K.tileSize
     this.load = () => {
         for(var i = 0; i < this.width; i++) {
             this.map[i] = []
+            this.mapImgIndex[i] = []
             for(var j = 0; j < this.height; j++) {
-                this.map[i][j] = Elements.MAP
+                this.map[i][j] = Elements.MAP;
+
+                //index img map
+                this.mapImgIndex[i][j] = Math.floor(Math.random() * 4) + 1;
+                if (Math.floor(Math.random() * 10) > 0)
+                    this.mapImgIndex[i][j] = 1;
             }
         }
     },
@@ -97,7 +104,7 @@ function TileMap() {
         ctx = gameField.context;
         for(var i = 0; i < this.width; i++) {
             for(var j = 0; j < this.height; j++) {
-                var img = this.getTileAsset(this.map[i][j])
+                var img = this.getTileAsset(this.map[i][j], this.mapImgIndex[i][j])
                 var x = K.tileSize * i;
                 var y = K.tileSize * j;
                 ctx.drawImage(img, x, y, K.tileSize, K.tileSize);
@@ -105,7 +112,7 @@ function TileMap() {
         }
     },
 
-    this.getTileAsset = (type) => {
+    this.getTileAsset = (type, index) => {
         switch(type) {
             case Elements.MAP:
                 return document.getElementById("mapTile");
@@ -116,6 +123,16 @@ function TileMap() {
             case Elements.SNAKE_BODY:
                 return document.getElementById("snakeBodyAsset");
         }
+        // switch(type) {
+        //     case Elements.MAP:
+        //         return document.getElementById("background" + index.toString());
+        //     case Elements.FRUIT:
+        //         return fruit.image;
+        //     case Elements.SNAKE_HEAD:
+        //         return document.getElementById("snakeHead1");
+        //     case Elements.SNAKE_BODY:
+        //         return document.getElementById("snakeBody1");
+        // }
     }
 }
 
@@ -203,6 +220,8 @@ function Fruit() {
             if(tileMap.map[x][y] == Elements.MAP) break;
         }
         tileMap.map[x][y] = Elements.FRUIT
+        var random = Math.floor(Math.random() * 3) + 1;
+        fruit.image = document.getElementById("fruit" + random.toString());
     }
 }
 
