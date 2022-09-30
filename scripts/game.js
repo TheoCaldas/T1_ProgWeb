@@ -101,16 +101,38 @@ function TileMap() {
         }
     },
     this.draw = () => {
+        this.snakeDraw();
         ctx = gameField.context;
         for(var i = 0; i < this.width; i++) {
             for(var j = 0; j < this.height; j++) {
                 var img = this.getTileAsset(this.map[i][j], this.mapImgIndex[i][j])
+                if (img == null) continue;
                 var x = K.tileSize * i;
                 var y = K.tileSize * j;
                 ctx.drawImage(img, x, y, K.tileSize, K.tileSize);
             }
         }
     },
+
+    this.snakeDraw = () => {
+        ctx = gameField.context;
+        var pos = snake.position;
+        var image = document.getElementById("snakeHead1");
+        var rotation = [];
+        rotation[Direction.Left] = [-Math.PI/2, 0, K.tileSize];
+        rotation[Direction.Right] = [Math.PI/2, K.tileSize, 0];
+        rotation[Direction.Down] = [Math.PI, K.tileSize, K.tileSize];
+        rotation[Direction.Up] = [0, 0, 0];
+        rotation[Direction.Idle] = [0, 0, 0];
+
+        ctx.save();
+        var x = (K.tileSize * pos.x) + rotation[snake.direction][1];
+        var y = (K.tileSize * pos.y) + rotation[snake.direction][2];
+        ctx.translate(x, y);
+        ctx.rotate(rotation[snake.direction][0]);
+        ctx.drawImage(image, 0, 0, K.tileSize, K.tileSize);
+        ctx.restore();    
+    }
 
     this.getTileAsset = (type, index) => {
         switch(type) {
@@ -128,10 +150,12 @@ function TileMap() {
         //         return document.getElementById("background" + index.toString());
         //     case Elements.FRUIT:
         //         return fruit.image;
-        //     case Elements.SNAKE_HEAD:
-        //         return document.getElementById("snakeHead1");
+        //     // case Elements.SNAKE_HEAD:
+        //     //     return document.getElementById("snakeHead1");
         //     case Elements.SNAKE_BODY:
         //         return document.getElementById("snakeBody1");
+        //     default:
+        //         return null;
         // }
     }
 }
