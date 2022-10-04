@@ -65,9 +65,9 @@ const Elements = {
 const Direction = {
     Idle : 0,
     Up : 1,
-    Down : 2,
-    Left : 3,
-    Right : 4
+    Down : -1,
+    Left : 2,
+    Right : -2
 } 
 
 const KeyCode = {
@@ -114,50 +114,98 @@ function TileMap() {
         }
     },
 
+    //Draws snake body with the correct images and rotations
     this.snakeDraw = () => {
-        ctx = gameField.context;
+        //head
         var pos = snake.position;
-        var image = document.getElementById("snakeHead1");
-        var rotation = [];
-        rotation[Direction.Left] = [-Math.PI/2, 0, K.tileSize];
-        rotation[Direction.Right] = [Math.PI/2, K.tileSize, 0];
-        rotation[Direction.Down] = [Math.PI, K.tileSize, K.tileSize];
-        rotation[Direction.Up] = [0, 0, 0];
-        rotation[Direction.Idle] = [0, 0, 0];
+        var image = document.getElementById("snakeHead2");
+        drawRotatedImage(image, pos, snake.direction);
 
-        ctx.save();
-        var x = (K.tileSize * pos.x) + rotation[snake.direction][1];
-        var y = (K.tileSize * pos.y) + rotation[snake.direction][2];
-        ctx.translate(x, y);
-        ctx.rotate(rotation[snake.direction][0]);
-        ctx.drawImage(image, 0, 0, K.tileSize, K.tileSize);
-        ctx.restore();    
+        //body
+        if (snake.body.length == 0) return;
+        var dir = pointsToDirection(pos, snake.body[0]);
+
+        var directions = [];
+        directions[Direction.Up] = Direction.Right;
+        directions[Direction.Left] = Direction.Up;
+        directions[Direction.Right] = Direction.Down;
+        directions[Direction.Down] = Direction.Left;
+        
+        for (var i = 0; i < snake.body.length; i++){
+            
+            if (i == snake.body.length - 1){ //tail
+                image = document.getElementById("snakeTail1");
+                drawRotatedImage(image, snake.body[i], dir);
+                return;
+            }
+
+            var nextDir = pointsToDirection(snake.body[i], snake.body[i + 1]);
+            if (dir != nextDir){ //use turn body image
+                image = document.getElementById("snakeBody2");
+                if (directions[dir] != nextDir) //counter-clockwise
+                    drawRotatedImage(image, snake.body[i], -nextDir);
+                else //clockwise
+                    drawRotatedImage(image, snake.body[i], dir);
+            }else{ //use straight body image
+                image = document.getElementById("snakeBody1");
+                drawRotatedImage(image, snake.body[i], dir);
+            }
+
+            dir = nextDir            
+        }
     }
 
     this.getTileAsset = (type, index) => {
-        switch(type) {
-            case Elements.MAP:
-                return document.getElementById("mapTile");
-            case Elements.FRUIT:
-                return document.getElementById("fruit");
-            case Elements.SNAKE_HEAD:
-                return document.getElementById("snakeHeadAsset");
-            case Elements.SNAKE_BODY:
-                return document.getElementById("snakeBodyAsset");
-        }
         // switch(type) {
         //     case Elements.MAP:
-        //         return document.getElementById("background" + index.toString());
+        //         return document.getElementById("mapTile");
         //     case Elements.FRUIT:
-        //         return fruit.image;
-        //     // case Elements.SNAKE_HEAD:
-        //     //     return document.getElementById("snakeHead1");
+        //         return document.getElementById("fruit");
+        //     case Elements.SNAKE_HEAD:
+        //         return document.getElementById("snakeHeadAsset");
         //     case Elements.SNAKE_BODY:
-        //         return document.getElementById("snakeBody1");
-        //     default:
-        //         return null;
+        //         return document.getElementById("snakeBodyAsset");
         // }
+        switch(type) {
+            case Elements.MAP:
+                return document.getElementById("background" + index.toString());
+            case Elements.FRUIT:
+                return fruit.image;
+            default:
+                return null;
+        }
     }
+}
+
+//draws image element in (tiled) position in relation to a direction
+function drawRotatedImage(image, position, direction){
+    ctx = gameField.context;
+    var rotation = [];
+    rotation[Direction.Left] = [-Math.PI/2, 0, K.tileSize];
+    rotation[Direction.Right] = [Math.PI/2, K.tileSize, 0];
+    rotation[Direction.Down] = [Math.PI, K.tileSize, K.tileSize];
+    rotation[Direction.Up] = [0, 0, 0];
+    rotation[Direction.Idle] = [0, 0, 0];
+
+    ctx.save();
+    var x = (K.tileSize * position.x) + rotation[direction][1];
+    var y = (K.tileSize * position.y) + rotation[direction][2];
+    ctx.translate(x, y);
+    ctx.rotate(rotation[direction][0]);
+    ctx.drawImage(image, 0, 0, K.tileSize, K.tileSize);
+    ctx.restore();    
+}
+
+//returns direction respective to delta distance between pos1 and pos2
+function pointsToDirection(pos1, pos2){
+    var deltaX = pos1.x - pos2.x;
+    var deltaY = pos1.y - pos2.y;
+
+    if (deltaX == 0 && deltaY == -1) return Direction.Up;
+    if (deltaX == 0 && deltaY == 1) return Direction.Down;
+    if (deltaX == -1 && deltaY == 0) return Direction.Left;
+    if (deltaX == 1 && deltaY == 0) return Direction.Right;
+    return Direction.Idle;
 }
 
 function Snake() {
