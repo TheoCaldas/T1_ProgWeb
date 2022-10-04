@@ -88,13 +88,13 @@ function GameSettings(difficulty) {
             this.speed = 10;
             break;
         case "normal":
-            this.tileSize = 40;
-            this.snakeInitialPos = {x : 10, y : 10};
+            this.tileSize = 30;
+            this.snakeInitialPos = {x : 12, y : 12};
             this.speed = 20;
             break;
         case "hard":
             this.tileSize = 20;
-            this.snakeInitialPos = {x : 10, y : 10};
+            this.snakeInitialPos = {x : 15, y : 15};
             this.speed = 30;
             break;
         default:
@@ -144,11 +144,11 @@ function TileMap() {
 
     this.draw = () => {
         switch(difficulty){
-            case "hard":
-                this.hardDraw();
+            case "easy":
+                this.easyDraw();
                 return;
             default:
-                this.easyDraw();
+                this.hardDraw();
                 return;
         }
     }
@@ -157,7 +157,7 @@ function TileMap() {
     this.hardDraw = () => {
         for(var i = 0; i < this.width; i++) {
             for(var j = 0; j < this.height; j++) {
-                var img = this.getTileAsset(this.map[i][j])
+                var img = getTileAsset(this.map[i][j])
                 var x = K.tileSize * i;
                 var y = K.tileSize * j;
                 gameField.context.drawImage(img, x, y, K.tileSize, K.tileSize);
@@ -191,14 +191,9 @@ function TileMap() {
 
         //body
         if (snake.body.length == 0) return;
-        var dir = pointsToDirection(pos, snake.body[0]);
-
-        var clockWiseTurns = [];
-        clockWiseTurns[Direction.Up] = Direction.Right;
-        clockWiseTurns[Direction.Left] = Direction.Up;
-        clockWiseTurns[Direction.Right] = Direction.Down;
-        clockWiseTurns[Direction.Down] = Direction.Left;
+        var clockWiseTurns = getClockwiseTurns();
         
+        var dir = pointsToDirection(pos, snake.body[0]);
         for (var i = 0; i < snake.body.length; i++){
             
             if (i == snake.body.length - 1){ //tail
@@ -222,51 +217,6 @@ function TileMap() {
             dir = nextDir            
         }
     }
-
-    //gets tile by tile type (used on hard draw)
-    this.getTileAsset = (type) => {
-        switch(type) {
-            case Elements.MAP:
-                return document.getElementById("mapTile");
-            case Elements.FRUIT:
-                return document.getElementById("fruit");
-            case Elements.SNAKE_HEAD:
-                return document.getElementById("snakeHeadAsset");
-            case Elements.SNAKE_BODY:
-                return document.getElementById("snakeBodyAsset");
-        }
-    }
-}
-
-//draws image element in (tiled) position in relation to a direction
-function drawRotatedImage(image, position, direction){
-    ctx = gameField.context;
-    var rotation = [];
-    rotation[Direction.Left] = [-Math.PI/2, 0, K.tileSize];
-    rotation[Direction.Right] = [Math.PI/2, K.tileSize, 0];
-    rotation[Direction.Down] = [Math.PI, K.tileSize, K.tileSize];
-    rotation[Direction.Up] = [0, 0, 0];
-    rotation[Direction.Idle] = [0, 0, 0];
-
-    ctx.save();
-    var x = (K.tileSize * position.x) + rotation[direction][1];
-    var y = (K.tileSize * position.y) + rotation[direction][2];
-    ctx.translate(x, y);
-    ctx.rotate(rotation[direction][0]);
-    ctx.drawImage(image, 0, 0, K.tileSize, K.tileSize);
-    ctx.restore();    
-}
-
-//returns direction respective to delta distance between pos1 and pos2
-function pointsToDirection(pos1, pos2){
-    var deltaX = pos1.x - pos2.x;
-    var deltaY = pos1.y - pos2.y;
-
-    if (deltaX == 0 && deltaY == -1) return Direction.Up;
-    if (deltaX == 0 && deltaY == 1) return Direction.Down;
-    if (deltaX == -1 && deltaY == 0) return Direction.Left;
-    if (deltaX == 1 && deltaY == 0) return Direction.Right;
-    return Direction.Idle;
 }
 
 //player snake abstraction
@@ -358,4 +308,62 @@ function Fruit() {
         var random = Math.floor(Math.random() * 3) + 1;
         fruit.image = document.getElementById("fruit" + random.toString());
     }
+}
+
+
+
+//---AUXILIAR FUNCTIONS---
+
+//gets tile by tile type (used on hard draw)
+function getTileAsset(type){
+    switch(type) {
+        case Elements.MAP:
+            return document.getElementById("mapTile");
+        case Elements.FRUIT:
+            return document.getElementById("fruit");
+        case Elements.SNAKE_HEAD:
+            return document.getElementById("snakeHeadAsset");
+        case Elements.SNAKE_BODY:
+            return document.getElementById("snakeBodyAsset");
+    }
+}
+
+//draws image element in (tiled) position in relation to a direction
+function drawRotatedImage(image, position, direction){
+    ctx = gameField.context;
+    var rotation = [];
+    rotation[Direction.Left] = [-Math.PI/2, 0, K.tileSize];
+    rotation[Direction.Right] = [Math.PI/2, K.tileSize, 0];
+    rotation[Direction.Down] = [Math.PI, K.tileSize, K.tileSize];
+    rotation[Direction.Up] = [0, 0, 0];
+    rotation[Direction.Idle] = [0, 0, 0];
+
+    ctx.save();
+    var x = (K.tileSize * position.x) + rotation[direction][1];
+    var y = (K.tileSize * position.y) + rotation[direction][2];
+    ctx.translate(x, y);
+    ctx.rotate(rotation[direction][0]);
+    ctx.drawImage(image, 0, 0, K.tileSize, K.tileSize);
+    ctx.restore();    
+}
+
+//returns direction respective to delta distance between pos1 and pos2
+function pointsToDirection(pos1, pos2){
+    var deltaX = pos1.x - pos2.x;
+    var deltaY = pos1.y - pos2.y;
+
+    if (deltaX == 0 && deltaY == -1) return Direction.Up;
+    if (deltaX == 0 && deltaY == 1) return Direction.Down;
+    if (deltaX == -1 && deltaY == 0) return Direction.Left;
+    if (deltaX == 1 && deltaY == 0) return Direction.Right;
+    return Direction.Idle;
+}
+
+function getClockwiseTurns(){
+    var dict = [];
+    dict[Direction.Up] = Direction.Right;
+    dict[Direction.Left] = Direction.Up;
+    dict[Direction.Right] = Direction.Down;
+    dict[Direction.Down] = Direction.Left;
+    return dict;
 }
