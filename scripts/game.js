@@ -1,60 +1,15 @@
+//---GLOBAL VARIABLES---
 onload = load;
 var tileMap;
 var snake;
 var fruit;
 var score = 0;
+var difficulty = getDifficulty();
+const K = new GameSettings(difficulty);
 
-const K = new GameSettings(getDifficulty());
 
-function getDifficulty(){
-    var searchString = window.location.search;
-    var a = searchString.split('difficultyField=');
-    return a[1];
-}
 
-function GameSettings(difficulty) {
-    this.screenWidth = 800;
-    this.screenHeight = 600;
-
-    switch(difficulty){
-        case "easy":
-            this.tileSize = 40;
-            this.snakeInitialPos = {x : 10, y : 10};
-            this.speed = 10;
-            break;
-        case "normal":
-            this.tileSize = 40;
-            this.snakeInitialPos = {x : 10, y : 10};
-            this.speed = 20;
-            break;
-        case "hard":
-            this.tileSize = 20;
-            this.snakeInitialPos = {x : 10, y : 10};
-            this.speed = 30;
-            break;
-        default:
-            break;
-    }
-}
-
-const gameField = {
-    canvas: document.createElement("canvas"),
-    start : function() {
-        this.canvas.width = K.screenWidth
-        this.canvas.height = K.screenHeight;
-        this.context = this.canvas.getContext("2d");
-        const gameFieldElement = document.getElementById("gameField")
-        gameFieldElement.insertBefore(this.canvas, gameFieldElement.children[1]);
-        this.interval = setInterval(update, 1000/K.speed)
-    },
-    clear : function() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    },
-    stop : function() {
-        clearInterval(this.interval);
-    }
-}
-
+//---CONST DICTS---
 const Elements = {
     MAP : 0,
     FRUIT : 1,
@@ -81,6 +36,92 @@ const KeyCode = {
     D : 68,
 }
 
+
+
+//---MAIN FUNCTIONS---
+
+//starts the game
+function load() {
+    gameField.start();
+    tileMap = new TileMap()
+    snake = new Snake()
+    fruit = new Fruit()
+    tileMap.load()
+    snake.load()
+    fruit.spawn()
+
+    document.getElementById("backButton").addEventListener("click", backToPreviousPage);
+}
+
+//updates every interval
+function update() {
+    snake.update()
+    gameField.clear()
+    tileMap.draw()
+}
+
+//returns to previous html page
+function backToPreviousPage(){
+    window.history.back();
+}
+
+//gets game difficulty by parsing url
+function getDifficulty(){
+    var searchString = window.location.search;
+    var a = searchString.split('difficultyField=');
+    return a[1];
+}
+
+
+
+//---MAIN ABSTRACTIONS---
+
+//game main settings based on difficulty
+function GameSettings(difficulty) {
+    this.screenWidth = 800;
+    this.screenHeight = 600;
+
+    switch(difficulty){
+        case "easy":
+            this.tileSize = 40;
+            this.snakeInitialPos = {x : 10, y : 10};
+            this.speed = 10;
+            break;
+        case "normal":
+            this.tileSize = 40;
+            this.snakeInitialPos = {x : 10, y : 10};
+            this.speed = 20;
+            break;
+        case "hard":
+            this.tileSize = 20;
+            this.snakeInitialPos = {x : 10, y : 10};
+            this.speed = 30;
+            break;
+        default:
+            break;
+    }
+}
+
+//game canvas and interval updater
+const gameField = {
+    canvas: document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = K.screenWidth
+        this.canvas.height = K.screenHeight;
+        this.context = this.canvas.getContext("2d");
+        const gameFieldElement = document.getElementById("gameField")
+        gameFieldElement.insertBefore(this.canvas, gameFieldElement.children[1]);
+        this.interval = setInterval(update, 1000/K.speed)
+    },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    stop : function() {
+        clearInterval(this.interval);
+    }
+}
+
+//game tile map logic and drawer 
 function TileMap() {
     this.map = []
     this.mapImgIndex = []
@@ -100,19 +141,46 @@ function TileMap() {
             }
         }
     },
+
     this.draw = () => {
-        this.snakeDraw();
-        ctx = gameField.context;
+        switch(difficulty){
+            case "hard":
+                this.hardDraw();
+                return;
+            default:
+                this.easyDraw();
+                return;
+        }
+    }
+
+    //user hard assets
+    this.hardDraw = () => {
         for(var i = 0; i < this.width; i++) {
             for(var j = 0; j < this.height; j++) {
-                var img = this.getTileAsset(this.map[i][j], this.mapImgIndex[i][j])
-                if (img == null) continue;
+                var img = this.getTileAsset(this.map[i][j])
                 var x = K.tileSize * i;
                 var y = K.tileSize * j;
-                ctx.drawImage(img, x, y, K.tileSize, K.tileSize);
+                gameField.context.drawImage(img, x, y, K.tileSize, K.tileSize);
             }
         }
     },
+
+    //user easy assets
+    this.easyDraw = () => {
+        this.snakeDraw();
+        for(var i = 0; i < this.width; i++) {
+            for(var j = 0; j < this.height; j++) {
+
+                if (this.map[i][j] == Elements.MAP) 
+                    var img = document.getElementById("background" + this.mapImgIndex[i][j].toString());
+                else if (this.map[i][j] == Elements.FRUIT)
+                    var img = fruit.image;
+                else 
+                    continue;
+                gameField.context.drawImage(img, K.tileSize * i, K.tileSize * j, K.tileSize, K.tileSize);
+            }
+        }
+    }
 
     //Draws snake body with the correct images and rotations
     this.snakeDraw = () => {
@@ -125,11 +193,11 @@ function TileMap() {
         if (snake.body.length == 0) return;
         var dir = pointsToDirection(pos, snake.body[0]);
 
-        var directions = [];
-        directions[Direction.Up] = Direction.Right;
-        directions[Direction.Left] = Direction.Up;
-        directions[Direction.Right] = Direction.Down;
-        directions[Direction.Down] = Direction.Left;
+        var clockWiseTurns = [];
+        clockWiseTurns[Direction.Up] = Direction.Right;
+        clockWiseTurns[Direction.Left] = Direction.Up;
+        clockWiseTurns[Direction.Right] = Direction.Down;
+        clockWiseTurns[Direction.Down] = Direction.Left;
         
         for (var i = 0; i < snake.body.length; i++){
             
@@ -142,7 +210,7 @@ function TileMap() {
             var nextDir = pointsToDirection(snake.body[i], snake.body[i + 1]);
             if (dir != nextDir){ //use turn body image
                 image = document.getElementById("snakeBody2");
-                if (directions[dir] != nextDir) //counter-clockwise
+                if (clockWiseTurns[dir] != nextDir) //counter-clockwise
                     drawRotatedImage(image, snake.body[i], -nextDir);
                 else //clockwise
                     drawRotatedImage(image, snake.body[i], dir);
@@ -155,24 +223,17 @@ function TileMap() {
         }
     }
 
-    this.getTileAsset = (type, index) => {
-        // switch(type) {
-        //     case Elements.MAP:
-        //         return document.getElementById("mapTile");
-        //     case Elements.FRUIT:
-        //         return document.getElementById("fruit");
-        //     case Elements.SNAKE_HEAD:
-        //         return document.getElementById("snakeHeadAsset");
-        //     case Elements.SNAKE_BODY:
-        //         return document.getElementById("snakeBodyAsset");
-        // }
+    //gets tile by tile type (used on hard draw)
+    this.getTileAsset = (type) => {
         switch(type) {
             case Elements.MAP:
-                return document.getElementById("background" + index.toString());
+                return document.getElementById("mapTile");
             case Elements.FRUIT:
-                return fruit.image;
-            default:
-                return null;
+                return document.getElementById("fruit");
+            case Elements.SNAKE_HEAD:
+                return document.getElementById("snakeHeadAsset");
+            case Elements.SNAKE_BODY:
+                return document.getElementById("snakeBodyAsset");
         }
     }
 }
@@ -208,6 +269,7 @@ function pointsToDirection(pos1, pos2){
     return Direction.Idle;
 }
 
+//player snake abstraction
 function Snake() {
     this.width = K.tileSize,
     this.height = K.tileSize,
@@ -280,6 +342,7 @@ function Snake() {
     }
 }
 
+//fruit abstraction
 function Fruit() {
     this.width = K.tileSize,
     this.height = K.tileSize,
@@ -296,32 +359,3 @@ function Fruit() {
         fruit.image = document.getElementById("fruit" + random.toString());
     }
 }
-
-function backToPreviousPage(){
-    window.history.back();
-}
-
-function load() {
-    gameField.start();
-    tileMap = new TileMap()
-    snake = new Snake()
-    fruit = new Fruit()
-    tileMap.load()
-    snake.load()
-    fruit.spawn()
-
-    document.getElementById("backButton").addEventListener("click", backToPreviousPage);
-}
-
-function update() {
-    snake.update()
-    draw()
-}
-
-function draw() {
-    gameField.clear()
-    tileMap.draw()
-}
-
-
-
