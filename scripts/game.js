@@ -4,6 +4,7 @@ var tileMap;
 var snake;
 var fruit;
 var score = 0;
+var hasUpdated;
 var difficulty = getDifficulty();
 const K = new GameSettings(difficulty);
 
@@ -232,6 +233,7 @@ function Snake() {
         }
     },
     this.update = function() {
+            hasUpdated = true;
             var lastPosition = { x: this.position.x, y: this.position.y};
             var newPosition = { x: this.position.x, y: this.position.y};
             switch (this.direction) {
@@ -284,6 +286,8 @@ function Snake() {
         document.getElementById("scoreTitle").innerHTML = "PONTOS: " + score;
     }
     this.keyDownListener = (event) => {
+        if (!hasUpdated) return;
+
         if ((event.keyCode == KeyCode.UpArrow || event.keyCode == KeyCode.W) && this.direction != Direction.Down) 
             this.direction = Direction.Up;
         else if ((event.keyCode == KeyCode.DownArrow || event.keyCode == KeyCode.S) && this.direction != Direction.Up) 
@@ -292,6 +296,8 @@ function Snake() {
             this.direction = Direction.Left;
         else if ((event.keyCode == KeyCode.RightArrow || event.keyCode == KeyCode.D) && this.direction != Direction.Left)
             this.direction = Direction.Right;
+
+        hasUpdated = false;
     }
 }
 
