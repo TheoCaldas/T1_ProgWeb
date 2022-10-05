@@ -91,7 +91,7 @@ function GameSettings(difficulty) {
         case "normal":
             this.tileSize = 25;
             this.snakeInitialPos = {x : 12, y : 12};
-            this.speed = 20;
+            this.speed = 15;
             break;
         case "hard":
             this.tileSize = 20;
@@ -145,11 +145,11 @@ function TileMap() {
 
     this.draw = () => {
         switch(difficulty){
-            case "easy":
-                this.easyDraw();
+            case "hard":
+                this.hardDraw();
                 return;
             default:
-                this.hardDraw();
+                this.easyDraw();
                 return;
         }
     }
@@ -187,7 +187,7 @@ function TileMap() {
     this.snakeDraw = () => {
         //head
         var pos = snake.position;
-        var image = document.getElementById("snakeHead2");
+        var image = (difficulty == "normal") ? document.getElementById("snakeHeadAsset") : document.getElementById("snakeHead2");
         drawRotatedImage(image, pos, snake.direction);
 
         //body
