@@ -10,7 +10,7 @@ canvas {
     transform: translate(-50%, -50%);
 }
 
-.backButton {
+.gameButton {
     text-align: center;
     position: relative;
     left: 50%;
@@ -29,7 +29,7 @@ canvas {
     text-align: center;
 }
 
-.backButton:hover {
+.gameButton:hover {
     background-color: rgb(166, 175, 167);
     color: black;
 }

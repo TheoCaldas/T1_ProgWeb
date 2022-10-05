@@ -1,12 +1,17 @@
 //---GLOBAL VARIABLES---
-onload = load;
+onload = setup;
 var tileMap;
 var snake;
 var fruit;
-var score = 0;
-var hasUpdated;
+var score;
+
 var difficulty = getDifficulty();
 const K = new GameSettings(difficulty);
+
+var hasUpdated;
+
+var playAgainButton;
+var scoreTitle;
 
 
 
@@ -41,24 +46,34 @@ const KeyCode = {
 
 //---MAIN FUNCTIONS---
 
+//setups references and load
+function setup(){
+    scoreTitle = document.getElementById("scoreTitle");
+    document.getElementById("backButton").addEventListener("click", backToPreviousPage);
+    playAgainButton = document.getElementById("playAgain");
+    playAgainButton.addEventListener("click", load);
+    load();
+}
+
 //starts the game
 function load() {
     gameField.start();
-    tileMap = new TileMap()
-    snake = new Snake()
-    fruit = new Fruit()
-    tileMap.load()
-    snake.load()
-    fruit.spawn()
-
-    document.getElementById("backButton").addEventListener("click", backToPreviousPage);
+    tileMap = new TileMap();
+    snake = new Snake();
+    fruit = new Fruit();
+    tileMap.load();
+    snake.load();
+    fruit.spawn();
+    playAgainButton.style.display = "none";
+    score = 0;
+    scoreTitle.innerHTML = "Use as setinhas do teclado ou WASD";
 }
 
 //updates every interval
 function update() {
-    snake.update()
-    gameField.clear()
-    tileMap.draw()
+    snake.update();
+    gameField.clear();
+    tileMap.draw();
 }
 
 //returns to previous html page
@@ -107,12 +122,12 @@ function GameSettings(difficulty) {
 const gameField = {
     canvas: document.createElement("canvas"),
     start : function() {
-        this.canvas.width = K.screenWidth
+        this.canvas.width = K.screenWidth;
         this.canvas.height = K.screenHeight;
         this.context = this.canvas.getContext("2d");
-        const gameFieldElement = document.getElementById("gameField")
+        const gameFieldElement = document.getElementById("gameField");
         gameFieldElement.insertBefore(this.canvas, gameFieldElement.children[1]);
-        this.interval = setInterval(update, 1000/K.speed)
+        this.interval = setInterval(update, 1000/K.speed);
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -124,14 +139,14 @@ const gameField = {
 
 //game tile map logic and drawer 
 function TileMap() {
-    this.map = []
-    this.mapImgIndex = []
-    this.width = K.screenWidth/K.tileSize
-    this.height = K.screenHeight/K.tileSize
+    this.map = [];
+    this.mapImgIndex = [];
+    this.width = K.screenWidth/K.tileSize;
+    this.height = K.screenHeight/K.tileSize;
     this.load = () => {
         for(var i = 0; i < this.width; i++) {
-            this.map[i] = []
-            this.mapImgIndex[i] = []
+            this.map[i] = [];
+            this.mapImgIndex[i] = [];
             for(var j = 0; j < this.height; j++) {
                 this.map[i][j] = Elements.MAP;
 
@@ -158,7 +173,7 @@ function TileMap() {
     this.hardDraw = () => {
         for(var i = 0; i < this.width; i++) {
             for(var j = 0; j < this.height; j++) {
-                var img = getTileAsset(this.map[i][j])
+                var img = getTileAsset(this.map[i][j]);
                 var x = K.tileSize * i;
                 var y = K.tileSize * j;
                 gameField.context.drawImage(img, x, y, K.tileSize, K.tileSize);
@@ -229,7 +244,7 @@ function Snake() {
     this.body = [],
     this.load = function() {
         onkeydown = (event) => {
-            this.keyDownListener(event)
+            this.keyDownListener(event);
         }
     },
     this.update = function() {
@@ -247,6 +262,8 @@ function Snake() {
             //check map colision
             if(this.gameHasEnded(newPosition)) {
                 gameField.stop();
+                playAgainButton.style.display = "block";
+                scoreTitle.innerHTML = "Você perdeu! PONTOS: " + score;
                 return
             }
 
@@ -255,19 +272,19 @@ function Snake() {
             //check fruit collision
             if (this.fruitWasHitted()) {
                 this.scores();
-                this.body.push(lastPosition)
-                fruit.spawn()
+                this.body.push(lastPosition);
+                fruit.spawn();
             }
 
-            this.body.unshift(lastPosition)
-            var aux = this.body.pop()
-            tileMap.map[aux.x][aux.y] = Elements.MAP
+            this.body.unshift(lastPosition);
+            var aux = this.body.pop();
+            tileMap.map[aux.x][aux.y] = Elements.MAP;
 
             this.body.forEach((tile) => {
-                tileMap.map[tile.x][tile.y] = Elements.SNAKE_BODY 
+                tileMap.map[tile.x][tile.y] = Elements.SNAKE_BODY ;
             })
 
-            tileMap.map[this.position.x][this.position.y] = Elements.SNAKE_HEAD
+            tileMap.map[this.position.x][this.position.y] = Elements.SNAKE_HEAD;
     },
     this.gameHasEnded = (pos) => {
         var minX = 0; var maxX = K.screenWidth/K.tileSize - 1;
@@ -276,14 +293,14 @@ function Snake() {
                pos.x > maxX ||
                pos.y < minY || 
                pos.y > maxY ||
-               tileMap.map[pos.x][pos.y] == Elements.SNAKE_BODY
+               tileMap.map[pos.x][pos.y] == Elements.SNAKE_BODY;
     },
     this.fruitWasHitted = () => {
-        return tileMap.map[this.position.x][this.position.y] == Elements.FRUIT
+        return tileMap.map[this.position.x][this.position.y] == Elements.FRUIT;
     },
     this.scores = () => {
         score++;
-        document.getElementById("scoreTitle").innerHTML = "PONTOS: " + score;
+        scoreTitle.innerHTML = "PONTOS: " + score;
     }
     this.keyDownListener = (event) => {
         if (!hasUpdated) return;
@@ -309,11 +326,11 @@ function Fruit() {
         var x;
         var y;
         while(true) {
-            x = Math.floor(Math.random() * K.screenWidth/K.tileSize)
-            y = Math.floor(Math.random() * K.screenHeight/K.tileSize)
+            x = Math.floor(Math.random() * K.screenWidth/K.tileSize);
+            y = Math.floor(Math.random() * K.screenHeight/K.tileSize);
             if(tileMap.map[x][y] == Elements.MAP) break;
         }
-        tileMap.map[x][y] = Elements.FRUIT
+        tileMap.map[x][y] = Elements.FRUIT;
         var random = Math.floor(Math.random() * 3) + 1;
         fruit.image = document.getElementById("fruit" + random.toString());
     }
