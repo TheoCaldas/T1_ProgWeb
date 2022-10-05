@@ -233,19 +233,22 @@ function Snake() {
     },
     this.update = function() {
             var lastPosition = { x: this.position.x, y: this.position.y};
+            var newPosition = { x: this.position.x, y: this.position.y};
             switch (this.direction) {
                 case Direction.Idle: break;
-                case Direction.Up: this.position.y -= 1; break;
-                case Direction.Down: this.position.y += 1; break;
-                case Direction.Left: this.position.x -= 1; break;
-                case Direction.Right: this.position.x += 1; break;
+                case Direction.Up: newPosition.y -= 1; break;
+                case Direction.Down: newPosition.y += 1; break;
+                case Direction.Left: newPosition.x -= 1; break;
+                case Direction.Right: newPosition.x += 1; break;
             }
 
             //check map colision
-            if(this.gameHasEnded()) {
+            if(this.gameHasEnded(newPosition)) {
                 gameField.stop();
                 return
             }
+
+            this.position = newPosition;
 
             //check fruit collision
             if (this.fruitWasHitted()) {
@@ -264,14 +267,14 @@ function Snake() {
 
             tileMap.map[this.position.x][this.position.y] = Elements.SNAKE_HEAD
     },
-    this.gameHasEnded = () => {
+    this.gameHasEnded = (pos) => {
         var minX = 0; var maxX = K.screenWidth/K.tileSize - 1;
         var minY = 0; var maxY = K.screenHeight/K.tileSize - 1; 
-        return this.position.x < minX ||
-               this.position.x > maxX ||
-               this.position.y < minY || 
-               this.position.y > maxY ||
-               tileMap.map[this.position.x][this.position.y] == Elements.SNAKE_BODY
+        return pos.x < minX ||
+               pos.x > maxX ||
+               pos.y < minY || 
+               pos.y > maxY ||
+               tileMap.map[pos.x][pos.y] == Elements.SNAKE_BODY
     },
     this.fruitWasHitted = () => {
         return tileMap.map[this.position.x][this.position.y] == Elements.FRUIT
