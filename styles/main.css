@@ -1,5 +1,6 @@
 body {
-    background-color: darkgreen;
+    font-family: 'Helvetica Neue', sans-serif; 
+    background-color: rgb(107, 208, 142);
 }
 
 .container {
@@ -8,29 +9,58 @@ body {
 
 .loginField {
     text-align: center;
-    border: solid black 3px;
     width: fit-content;
     position: absolute;
     padding: 30px;
     left: 50%;
     top: 45%;
     transform: translate(-50%, -50%);
+    border: black 4px solid;
+    border-radius: 25px;
+    background-color: rgb(56, 124, 124);
 }
 
 .title {
     color: rgb(163, 248, 117);
 }
 
+h1 { 
+    font-size: 70px; 
+    font-weight: bold; 
+    letter-spacing: -1px; 
+    line-height: 1; 
+    text-align: center; 
+}
+
 .difficultyField {
     position: relative;
+    width: 150px;
+    font-size: 50px;
+
 }
 
 .emailField{
-    /* outline: 3px solid black; */
+    width: 300px;
+    height: 30px;
+    font-size: 20px;
+    border-radius: 5px;
+    text-indent: 5px;
 }
 
 .errorMessage{
     color: red;
     visibility: hidden;
-    font-size: small;
+    font-size: large;
+    padding-top: 5px;
 }
+
+.playButton{
+    width: 100px;
+    height: 50px;
+    font-size: 30px;
+    border-radius: 10px;
+    font-family: 'Helvetica Neue', sans-serif; 
+    color: darkgreen;
+    background-color: rgb(163, 248, 117);
+}
+

@@ -52,6 +52,7 @@ function setup(){
     document.getElementById("backButton").addEventListener("click", backToPreviousPage);
     playAgainButton = document.getElementById("playAgain");
     playAgainButton.addEventListener("click", load);
+    if (difficulty == "hard") document.body.style.backgroundColor = "firebrick";
     load();
 }
 
