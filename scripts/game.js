@@ -88,7 +88,7 @@ function GameSettings(difficulty) {
             this.speed = 10;
             break;
         case "normal":
-            this.tileSize = 30;
+            this.tileSize = 25;
             this.snakeInitialPos = {x : 12, y : 12};
             this.speed = 20;
             break;

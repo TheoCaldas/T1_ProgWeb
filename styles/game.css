@@ -33,3 +33,7 @@ canvas {
     background-color: rgb(166, 175, 167);
     color: black;
 }
+
+img {
+    display: none;
+}
