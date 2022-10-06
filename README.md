@@ -24,7 +24,7 @@ Dependendo da dificuldade selecionada, diferentes sprites aparecerão. <br>
 <img src="/images/easy/mapa_01.png" width="30px" height="30px"/>
 <img src="/images/easy/mapa_02.png" width="30px" height="30px"/>
 <img src="/images/easy/mapa_03.png" width="30px" height="30px"/> ou
-<img src="/images/mapTile.png" width="30px" height="30px"/>
+<img src="/images/mapTile1.png" width="30px" height="30px"/>
 
 <br> Cabeça da minhoca: 
 <img src="/images/easy/cobra_05.png" width="30px" height="30px"/> ou
@@ -47,10 +47,10 @@ Dependendo da dificuldade selecionada, diferentes sprites aparecerão. <br>
 <img src="/images/fluxograma.png" alt="Fluxograma Minhoca Louca"/>
 
 ## 2. Relatório
-Foi implementado o menu inicial que pede ao usuário, através de formulário, seu email em Priplanus (texto) e a dificuldade do jogo (seletor de opções). <br>
-Foi implementada a verificação do formato do email (tal como descrito no enunciado) e a verificação de uma dificuldade selecionada. <br>
-Foram implementadas as mecânicas principais do jogo. <br>
-Foi implementado o fluxo de telas descritos acima. <br>
+Foi implementado o menu inicial que pede ao usuário, através de formulário, seu email em Priplanus (texto) e a dificuldade do jogo (seletor de opções). <br><br>
+Foi implementada a verificação do formato do email (tal como descrito no enunciado) e a verificação de uma dificuldade selecionada. <br><br>
+Foram implementadas as mecânicas principais do jogo. <br><br>
+Foi implementado o fluxo de telas descritos acima. <br><br>
 
 ### 2.1 Requisitos Atendidos
 • Identificação do usuário no formato de email utilizado em Priplanus e validação utilizando expressão regular -> main.js <br>
