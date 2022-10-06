@@ -19,9 +19,29 @@ Quanto maior a dificuldade, mais para dentro da terra a minhoca está. Logo, sua
 ### 1.2 Identificação dos Elementos
 Dependendo da dificuldade selecionada, diferentes sprites aparecerão. <br>
 
-<br> Cabeça: 
+<br> Mapa (plano de fundo): 
 <img src="/images/easy/mapa_00.png" width="30px" height="30px"/>
+<img src="/images/easy/mapa_01.png" width="30px" height="30px"/>
+<img src="/images/easy/mapa_02.png" width="30px" height="30px"/>
+<img src="/images/easy/mapa_03.png" width="30px" height="30px"/> ou
+<img src="/images/mapTile.png" width="30px" height="30px"/>
 
+<br> Cabeça da minhoca: 
+<img src="/images/easy/cobra_05.png" width="30px" height="30px"/> ou
+<img src="/images/snakeHead.png" width="30px" height="30px"/>
+
+<br> Corpo da minhoca: 
+<img src="/images/easy/cobra_06.png" width="30px" height="30px"/>
+<img src="/images/easy/cobra_07.png" width="30px" height="30px"/>
+<img src="/images/easy/cobra_08.png" width="30px" height="30px"/> ou
+<img src="/images/snakeBody.png" width="30px" height="30px"/>
+
+<br> Fruta (coletável):
+<img src="/images/easy/fruta_09.png" width="30px" height="30px"/>
+<img src="/images/easy/fruta_10.png" width="30px" height="30px"/>
+<img src="/images/easy/fruta_11.png" width="30px" height="30px"/> ou
+<img src="/images/fruit.png" width="30px" height="30px"/>
+<br>
 
 ### 1.3 Fluxo de Telas
 <img src="/images/fluxograma.png" alt="Fluxograma Minhoca Louca"/>
