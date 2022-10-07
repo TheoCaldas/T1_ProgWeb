@@ -4,7 +4,7 @@
 
 # Minhoca Louca
 Jogo baseado no famoso "Snake". <br>
-<a href="https://heroic-melomakarona-365187.netlify.app">Clique aqui para acessar a página hospedada!</a><br>
+<a href="https://minhoca-louca.netlify.app">Clique aqui para acessar a página hospedada!</a><br>
 
 ## 1. GDD
 Nesse jogo, você é uma minhoca louca que precisa coletar frutas para ganhar pontos. <br>
